@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#include <strings.h>
+#endif
 #include "db/parser.h"
 #include "db/executor.h"
 #include "db/csv_loader.h"
@@ -155,8 +161,13 @@ void handle_load_csv() {
     // Show available CSV files
     printf("Available CSV files in data/ directory:\n");
     
-    // List CSV files in data directory
-    FILE* pipe = _popen("dir /b data\\*.csv 2>nul", "r");
+    // List CSV files in data directory - cross-platform
+    FILE* pipe;
+#ifdef _WIN32
+    pipe = _popen("dir /b data\\*.csv 2>nul", "r");
+#else
+    pipe = popen("ls data/*.csv 2>/dev/null", "r");
+#endif
     if (pipe != NULL) {
         char buffer[256];
         int file_count = 0;
@@ -164,11 +175,25 @@ void handle_load_csv() {
             // Remove newline character
             buffer[strcspn(buffer, "\r\n")] = 0;
             if (strlen(buffer) > 0) {
+                // Extract just the filename from path (for Unix)
+#ifndef _WIN32
+                char* slash = strrchr(buffer, '/');
+                if (slash) {
+                    printf("  - %s\n", slash + 1);
+                } else {
+                    printf("  - %s\n", buffer);
+                }
+#else
                 printf("  - %s\n", buffer);
+#endif
                 file_count++;
             }
         }
+#ifdef _WIN32
         _pclose(pipe);
+#else
+        pclose(pipe);
+#endif
         
         if (file_count == 0) {
             printf("  No CSV files found in data/ directory\n");
@@ -271,8 +296,13 @@ void handle_run_tests() {
     // Show available test files
     printf("Available test files in tests/ directory:\n");
     
-    // List test files in tests directory
-    FILE* pipe = _popen("dir /b tests\\*.txt 2>nul", "r");
+    // List test files in tests directory - cross-platform
+    FILE* pipe;
+#ifdef _WIN32
+    pipe = _popen("dir /b tests\\*.txt 2>nul", "r");
+#else
+    pipe = popen("ls tests/*.txt 2>/dev/null", "r");
+#endif
     if (pipe != NULL) {
         char buffer[256];
         int file_count = 0;
@@ -280,11 +310,25 @@ void handle_run_tests() {
             // Remove newline character
             buffer[strcspn(buffer, "\r\n")] = 0;
             if (strlen(buffer) > 0) {
+                // Extract just the filename from path (for Unix)
+#ifndef _WIN32
+                char* slash = strrchr(buffer, '/');
+                if (slash) {
+                    printf("  - %s\n", slash + 1);
+                } else {
+                    printf("  - %s\n", buffer);
+                }
+#else
                 printf("  - %s\n", buffer);
+#endif
                 file_count++;
             }
         }
+#ifdef _WIN32
         _pclose(pipe);
+#else
+        pclose(pipe);
+#endif
         
         if (file_count == 0) {
             printf("  No test files found in tests/ directory\n");

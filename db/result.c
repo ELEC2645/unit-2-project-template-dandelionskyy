@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include <string.h>
+#define strcasecmp _stricmp
+#else
+#include <strings.h>
+#endif
 
 void print_query_result(const QueryResult* result) {
     if (result == NULL) {
