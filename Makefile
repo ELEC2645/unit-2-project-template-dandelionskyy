@@ -4,26 +4,26 @@
 
 # 编译器设置
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -g -I./src
+CFLAGS = -Wall -Wextra -std=c99 -g -I.
 LDFLAGS = -lm
 
 # 目标文件
 TARGET = minidb
 BUILD_DIR = build
-SRC_DIR = src
+SRC_DIR = .
 
 # 源文件
-SRCS = $(SRC_DIR)/main.c \
-       $(SRC_DIR)/db/csv_loader.c \
-       $(SRC_DIR)/db/parser.c \
-       $(SRC_DIR)/db/executor.c \
-       $(SRC_DIR)/db/result.c \
-       $(SRC_DIR)/test_framework/test_loader.c \
-       $(SRC_DIR)/test_framework/test_runner.c \
-       $(SRC_DIR)/test_framework/test_reporter.c \
-       $(SRC_DIR)/ai/ai_helper.c \
-       $(SRC_DIR)/utils/string_utils.c \
-       $(SRC_DIR)/utils/file_utils.c
+SRCS = main.c \
+       db/csv_loader.c \
+       db/parser.c \
+       db/executor.c \
+       db/result.c \
+       test_framework/test_loader.c \
+       test_framework/test_runner.c \
+       test_framework/test_reporter.c \
+       ai/ai_helper.c \
+       utils/string_utils.c \
+       utils/file_utils.c
 
 # 对象文件
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
@@ -46,10 +46,10 @@ $(BUILD_DIR):
 	@echo "创建构建目录..."
 ifeq ($(OS),Windows_NT)
 	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
-	@if not exist $(BUILD_DIR)/db mkdir $(BUILD_DIR)/db
-	@if not exist $(BUILD_DIR)/test_framework mkdir $(BUILD_DIR)/test_framework
-	@if not exist $(BUILD_DIR)/ai mkdir $(BUILD_DIR)/ai
-	@if not exist $(BUILD_DIR)/utils mkdir $(BUILD_DIR)/utils
+	@if not exist $(BUILD_DIR)\db mkdir $(BUILD_DIR)\db
+	@if not exist $(BUILD_DIR)\test_framework mkdir $(BUILD_DIR)\test_framework
+	@if not exist $(BUILD_DIR)\ai mkdir $(BUILD_DIR)\ai
+	@if not exist $(BUILD_DIR)\utils mkdir $(BUILD_DIR)\utils
 else
 	@mkdir -p $(BUILD_DIR)/db
 	@mkdir -p $(BUILD_DIR)/test_framework
@@ -144,49 +144,49 @@ help:
 .PHONY: all clean test debug release analyze memcheck install uninstall help main.out main.exe
 
 # 依赖关系
-$(BUILD_DIR)/$(SRC_DIR)/main.o: $(SRC_DIR)/main.c \
-                               $(SRC_DIR)/db/parser.h \
-                               $(SRC_DIR)/db/executor.h \
-                               $(SRC_DIR)/db/csv_loader.h \
-                               $(SRC_DIR)/test_framework/test_runner.h \
-                               $(SRC_DIR)/ai/ai_helper.h \
-                               $(SRC_DIR)/utils/string_utils.h
+$(BUILD_DIR)/main.o: main.c \
+                    db/parser.h \
+                    db/executor.h \
+                    db/csv_loader.h \
+                    test_framework/test_runner.h \
+                    ai/ai_helper.h \
+                    utils/string_utils.h
 
-$(BUILD_DIR)/$(SRC_DIR)/db/csv_loader.o: $(SRC_DIR)/db/csv_loader.c \
-                                        $(SRC_DIR)/db/csv_loader.h \
-                                        $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/db/csv_loader.o: db/csv_loader.c \
+                             db/csv_loader.h \
+                             db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/db/parser.o: $(SRC_DIR)/db/parser.c \
-                                    $(SRC_DIR)/db/parser.h \
-                                    $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/db/parser.o: db/parser.c \
+                         db/parser.h \
+                         db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/db/executor.o: $(SRC_DIR)/db/executor.c \
-                                      $(SRC_DIR)/db/executor.h \
-                                      $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/db/executor.o: db/executor.c \
+                           db/executor.h \
+                           db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/db/result.o: $(SRC_DIR)/db/result.c \
-                                    $(SRC_DIR)/db/result.h \
-                                    $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/db/result.o: db/result.c \
+                         db/result.h \
+                         db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/test_framework/test_loader.o: $(SRC_DIR)/test_framework/test_loader.c \
-                                                     $(SRC_DIR)/test_framework/test_loader.h \
-                                                     $(SRC_DIR)/test_framework/testcase.h
+$(BUILD_DIR)/test_framework/test_loader.o: test_framework/test_loader.c \
+                                          test_framework/test_loader.h \
+                                          test_framework/testcase.h
 
-$(BUILD_DIR)/$(SRC_DIR)/test_framework/test_runner.o: $(SRC_DIR)/test_framework/test_runner.c \
-                                                     $(SRC_DIR)/test_framework/test_runner.h \
-                                                     $(SRC_DIR)/test_framework/testcase.h \
-                                                     $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/test_framework/test_runner.o: test_framework/test_runner.c \
+                                          test_framework/test_runner.h \
+                                          test_framework/testcase.h \
+                                          db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/test_framework/test_reporter.o: $(SRC_DIR)/test_framework/test_reporter.c \
-                                                       $(SRC_DIR)/test_framework/test_reporter.h \
-                                                       $(SRC_DIR)/test_framework/testcase.h
+$(BUILD_DIR)/test_framework/test_reporter.o: test_framework/test_reporter.c \
+                                            test_framework/test_reporter.h \
+                                            test_framework/testcase.h
 
-$(BUILD_DIR)/$(SRC_DIR)/ai/ai_helper.o: $(SRC_DIR)/ai/ai_helper.c \
-                                       $(SRC_DIR)/ai/ai_helper.h \
-                                       $(SRC_DIR)/db/table.h
+$(BUILD_DIR)/ai/ai_helper.o: ai/ai_helper.c \
+                            ai/ai_helper.h \
+                            db/table.h
 
-$(BUILD_DIR)/$(SRC_DIR)/utils/string_utils.o: $(SRC_DIR)/utils/string_utils.c \
-                                             $(SRC_DIR)/utils/string_utils.h
+$(BUILD_DIR)/utils/string_utils.o: utils/string_utils.c \
+                                  utils/string_utils.h
 
-$(BUILD_DIR)/$(SRC_DIR)/utils/file_utils.o: $(SRC_DIR)/utils/file_utils.c \
-                                           $(SRC_DIR)/utils/file_utils.h
+$(BUILD_DIR)/utils/file_utils.o: utils/file_utils.c \
+                                utils/file_utils.h

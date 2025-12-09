@@ -9,17 +9,17 @@ if not exist build\ai mkdir build\ai
 if not exist build\utils mkdir build\utils
 
 echo 编译源文件...
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/main.c -o build/main.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/db/csv_loader.c -o build/db/csv_loader.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/db/parser.c -o build/db/parser.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/db/executor.c -o build/db/executor.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/db/result.c -o build/db/result.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/test_framework/test_loader.c -o build/test_framework/test_loader.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/test_framework/test_runner.c -o build/test_framework/test_runner.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/test_framework/test_reporter.c -o build/test_framework/test_reporter.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/ai/ai_helper.c -o build/ai/ai_helper.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/utils/string_utils.c -o build/utils/string_utils.o
-gcc -Wall -Wextra -std=c99 -g -Isrc -c src/utils/file_utils.c -o build/utils/file_utils.o
+gcc -Wall -Wextra -std=c99 -g -I. -c main.c -o build/main.o
+gcc -Wall -Wextra -std=c99 -g -I. -c db/csv_loader.c -o build/db/csv_loader.o
+gcc -Wall -Wextra -std=c99 -g -I. -c db/parser.c -o build/db/parser.o
+gcc -Wall -Wextra -std=c99 -g -I. -c db/executor.c -o build/db/executor.o
+gcc -Wall -Wextra -std=c99 -g -I. -c db/result.c -o build/db/result.o
+gcc -Wall -Wextra -std=c99 -g -I. -c test_framework/test_loader.c -o build/test_framework/test_loader.o
+gcc -Wall -Wextra -std=c99 -g -I. -c test_framework/test_runner.c -o build/test_framework/test_runner.o
+gcc -Wall -Wextra -std=c99 -g -I. -c test_framework/test_reporter.c -o build/test_framework/test_reporter.o
+gcc -Wall -Wextra -std=c99 -g -I. -c ai/ai_helper.c -o build/ai/ai_helper.o
+gcc -Wall -Wextra -std=c99 -g -I. -c utils/string_utils.c -o build/utils/string_utils.o
+gcc -Wall -Wextra -std=c99 -g -I. -c utils/file_utils.c -o build/utils/file_utils.o
 
 echo 链接目标文件...
 gcc build/main.o ^
