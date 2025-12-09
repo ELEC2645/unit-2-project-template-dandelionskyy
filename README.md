@@ -1,37 +1,112 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=21687444)
-# ELEC2645 Unit 2 Project Template
+# Electronic Component Database & Calculation System
 
-** PLEASE DELETE THIS README AND REPLACE IT WITH YOUR OWN README.md FILE DESCRIBING YOUR PROJECT **
+A lightweight SQL database engine with professional electronic engineering calculation tools, designed for Electronic Information Engineering applications.
 
+## Project Overview
 
-This is the basic code for a command line application which you should use for your Unit 2 project.
+This project combines database management capabilities with electronic engineering calculations, providing a comprehensive tool for managing electronic components and performing circuit analysis.
 
-The code has separated the menu handling code in `main.c` and the function implementations in `funcs.c`. You should add your code to `funcs.c` (or you can create new files if you wish), and update `main.c` to call your functions from the menu.
+## Features
 
+### Database Management
+- **CSV File Loading**: Load electronic component data from CSV files
+- **SQL Query Engine**: Execute SQL queries on component data
+- **Data Filtering**: Filter components by category, specification, etc.
+- **Automated Testing**: Run test suites to verify system functionality
 
-### 1 Run code
+### Professional Calculation Tools
+- **Resistor Calculations**: Series and parallel resistance calculations
+- **Voltage Divider**: Calculate output voltage for voltage divider circuits
+- **RC Time Constant**: Calculate RC circuit timing characteristics
+- **Filter Design**: Low pass filter cutoff frequency calculations
 
-You can build the code as we have been using in the labs with 
-`gcc main.c funcs.c -o main.out -lm` (the `-lm` is required to link the math library). You can also use `make -B` to force a rebuild using the provided `Makefile`.
+### AI Assistance
+- Natural language query suggestions
+- Circuit design recommendations
+- Component selection guidance
 
-Then run the code with `./main.out`
+## Electronic Information Engineering Integration
 
+### Professional Relevance
+This project demonstrates the application of database systems in electronic engineering contexts, including:
 
-### 2 The assignment
+1. **Component Inventory Management**: Track electronic components with specifications
+2. **Circuit Design Support**: Provide calculation tools for common circuit designs
+3. **Data Analysis**: Analyze component usage patterns and inventory levels
+4. **Educational Tool**: Learn both database concepts and electronic engineering principles
 
-Please read the assignment brief on the Minerva page for details of what you need to implement. 
+### Technical Skills Applied
+- **Database Systems**: SQL query processing, data management
+- **Embedded Systems**: Component data modeling for hardware applications
+- **Signal Processing**: Filter design and frequency calculations
+- **Circuit Analysis**: Electronic circuit parameter calculations
 
+## Data Structure
 
+### Components Database
+The system includes sample data for common electronic components:
+- Resistors, Capacitors, Inductors
+- Microcontrollers and Logic ICs
+- Diodes, Transistors, Crystals
+- LEDs and other discrete components
 
-### 3 Test command
+### Circuit Designs
+Example circuit designs with formulas and applications:
+- Low Pass Filters
+- Voltage Dividers
+- LED Drivers
+- RC Timing Circuits
 
-The `test.sh` script is provided to check that your code compiles correctly. This is what the autograder will use to check your submission. You can run it with `bash test.sh` or `./test.sh` or just `make test`. 
+## Usage
 
-You do not need to modify this script, but you can look at it to see what it does.
+### Loading Data
+1. Select "Load CSV File" from main menu
+2. Choose from available CSV files in data/ directory
+3. Available files: `components.csv`, `circuit_designs.csv`
 
+### SQL Queries
+Execute SQL queries on loaded data:
+```sql
+SELECT * FROM components WHERE category='Resistor'
+SELECT component_name, quantity FROM components WHERE quantity < 50
+```
 
-### 4 Submit Solution
+### Professional Calculations
+Access electronic engineering calculations:
+- Resistor series/parallel combinations
+- Voltage divider outputs
+- RC time constants
+- Filter cutoff frequencies
 
-Use the same method as previous labs to commit and push your code to your GitHub repository for the autograder to check. 
+## Building and Running
 
-In your final journal post, please include a link to your GitHub repository containing your code  *and* a zip file of your code as an attachment.
+### Compilation
+```bash
+build.bat
+```
+
+### Execution
+```bash
+minidb.exe
+```
+
+## Project Structure
+```
+MiniDB-TestAI-Project/
+├── src/                    # Source code
+├── data/                   # Electronic component data files
+├── tests/                  # Test cases
+├── build/                  # Compiled binaries
+└── docs/                   # Documentation
+```
+
+## Educational Value
+
+This project serves as an excellent demonstration of how database systems can be applied in electronic engineering contexts, bridging the gap between software development and hardware design.
+
+## Future Enhancements
+
+- Support for more complex circuit calculations
+- Integration with component datasheets
+- Visualization of circuit designs
+- Export functionality for BOM (Bill of Materials)
