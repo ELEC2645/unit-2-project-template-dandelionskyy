@@ -1,0 +1,15 @@
+# Basic Function Test Cases
+# Format: Test Name|Test Type|SQL Query|Data File|Expected Rows|Description
+
+Data Load Test|DATA_LOAD||sample1.csv|10|Test CSV file loading functionality
+Full Table Query|SQL_QUERY|SELECT * FROM sample1|sample1.csv|10|Test full table query functionality
+Select Specific Columns|SQL_QUERY|SELECT name, age FROM sample1|sample1.csv|10|Test column selection functionality
+Age Condition Query|SQL_QUERY|SELECT * FROM sample1 WHERE age > 30|sample1.csv|3|Test numeric condition filtering
+City Condition Query|SQL_QUERY|SELECT * FROM sample1 WHERE city = 'Beijing'|sample1.csv|1|Test string condition filtering
+Salary Range Query|SQL_QUERY|SELECT * FROM sample1 WHERE salary > 55000|sample1.csv|4|Test numeric range query
+Multiple Conditions Query|SQL_QUERY|SELECT * FROM sample1 WHERE age > 25 AND salary < 60000|sample1.csv|4|Test AND condition combination
+Product Data Load|DATA_LOAD||sample2.csv|10|Test product data loading
+Product Query|SQL_QUERY|SELECT * FROM sample2|sample2.csv|10|Test product table query
+Price Filter|SQL_QUERY|SELECT * FROM sample2 WHERE price > 1000|sample2.csv|7|Test price condition filtering
+Category Query|SQL_QUERY|SELECT * FROM sample2 WHERE category = 'Electronics'|sample2.csv|3|Test category filtering
+Stock Query|SQL_QUERY|SELECT * FROM sample2 WHERE stock < 50|sample2.csv|5|Test stock condition filtering
