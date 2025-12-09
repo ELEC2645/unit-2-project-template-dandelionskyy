@@ -1,3 +1,9 @@
+/* Enable POSIX and X/Open features for popen/pclose */
+#ifndef _WIN32
+#define _POSIX_C_SOURCE 200809L
+#define _XOPEN_SOURCE 700
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,8 +76,24 @@ static int get_user_input(void)
     int valid_input = 0;
     int value = 0;
 
+    // Check if stdin is a terminal (interactive)
+    int is_interactive = 1;
+#ifdef _WIN32
+    is_interactive = _isatty(_fileno(stdin));
+#else
+    is_interactive = isatty(fileno(stdin));
+#endif
+
+    if (!is_interactive) {
+        // Non-interactive mode (e.g., in CI/CD pipeline)
+        // Automatically choose exit option to terminate gracefully
+        printf("\nNon-interactive mode detected. Automatically exiting.\n");
+        return MENU_ITEMS; // Return exit option
+    }
+
     do {
         printf("\nSelect item: ");
+        
         if (!fgets(buf, sizeof(buf), stdin)) {
             /* EOF or error; bail out gracefully */
             puts("\nInput error. Exiting.");
