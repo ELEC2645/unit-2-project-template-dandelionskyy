@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-char* get_ai_suggestion(const char* question, const Table* table) {
+char* obtain_ai_recommendation(const char* question, const Table* table) {
     if (question == NULL) {
         return NULL;
     }
@@ -14,33 +14,32 @@ char* get_ai_suggestion(const char* question, const Table* table) {
         return NULL;
     }
 
-    // Simple AI suggestion logic
-    // In real applications, this could integrate with actual AI models
-    char question_lower[256];
-    strncpy(question_lower, question, sizeof(question_lower) - 1);
-    question_lower[sizeof(question_lower) - 1] = '\0';
+    /* 简单的AI建议逻辑 */
+    char q_lower[256];
+    strncpy(q_lower, question, sizeof(q_lower) - 1);
+    q_lower[sizeof(q_lower) - 1] = '\0';
     
-    for (char* p = question_lower; *p; p++) {
+    for (char* p = q_lower; *p; p++) {
         *p = tolower(*p);
     }
 
-    if (strstr(question_lower, "how") != NULL || strstr(question_lower, "what") != NULL) {
-        if (strstr(question_lower, "query") != NULL || strstr(question_lower, "select") != NULL) {
+    if (strstr(q_lower, "how") != NULL || strstr(q_lower, "what") != NULL) {
+        if (strstr(q_lower, "query") != NULL || strstr(q_lower, "select") != NULL) {
             if (table != NULL) {
-                sprintf(suggestion, "You can use SELECT statement to query data. For example: SELECT * FROM %s WHERE condition", table->name);
+                sprintf(suggestion, "Use SELECT statement to query data. Example: SELECT * FROM %s WHERE condition", table->name);
             } else {
-                strcpy(suggestion, "You can use SELECT statement to query data. For example: SELECT * FROM table_name WHERE condition");
+                strcpy(suggestion, "Use SELECT statement to query data. Example: SELECT * FROM table_name WHERE condition");
             }
-        } else if (strstr(question_lower, "filter") != NULL) {
-            strcpy(suggestion, "Use WHERE clause for data filtering. For example: SELECT * FROM table_name WHERE column_name = 'value'");
-        } else if (strstr(question_lower, "sort") != NULL) {
-            strcpy(suggestion, "Use ORDER BY clause for sorting. For example: SELECT * FROM table_name ORDER BY column_name ASC/DESC");
+        } else if (strstr(q_lower, "filter") != NULL) {
+            strcpy(suggestion, "Use WHERE clause for filtering. Example: SELECT * FROM table_name WHERE column_name = 'value'");
+        } else if (strstr(q_lower, "sort") != NULL) {
+            strcpy(suggestion, "Use ORDER BY clause for sorting. Example: SELECT * FROM table_name ORDER BY column_name ASC/DESC");
         } else {
-            strcpy(suggestion, "Please specify what functionality you want to learn about, I can provide corresponding SQL statement examples.");
+            strcpy(suggestion, "Please specify what you want to do, I can give SQL examples.");
         }
-    } else if (strstr(question_lower, "select") != NULL || strstr(question_lower, "query") != NULL) {
+    } else if (strstr(q_lower, "select") != NULL || strstr(q_lower, "query") != NULL) {
         if (table != NULL) {
-            sprintf(suggestion, "Current table '%s' contains %d columns: ", table->name, table->col_count);
+            sprintf(suggestion, "Table '%s' has %d columns: ", table->name, table->col_count);
             char col_list[256] = "";
             for (int i = 0; i < table->col_count && i < 5; i++) {
                 strcat(col_list, table->columns[i].name);
@@ -53,19 +52,19 @@ char* get_ai_suggestion(const char* question, const Table* table) {
             }
             strcat(suggestion, col_list);
         } else {
-            strcpy(suggestion, "Please load a data file first, then I can provide more specific query suggestions.");
+            strcpy(suggestion, "Please load a CSV file first for better suggestions.");
         }
-    } else if (strstr(question_lower, "optimize") != NULL) {
-        strcpy(suggestion, "SQL optimization suggestions: 1. Use specific column names instead of * 2. Add appropriate WHERE conditions 3. Create indexes for frequently queried columns");
+    } else if (strstr(q_lower, "optimize") != NULL) {
+        strcpy(suggestion, "SQL optimization tips: 1. Use column names instead of * 2. Add WHERE conditions 3. Create indexes for often queried columns");
     } else {
-        strcpy(suggestion, "I can help you: 1. Generate SQL query statements 2. Optimize existing queries 3. Explain query execution plans 4. Provide database usage suggestions");
+        strcpy(suggestion, "I can help: 1. Generate SQL queries 2. Optimize queries 3. Explain query plans 4. Give database suggestions");
     }
 
     return suggestion;
 }
 
-char* generate_sql_from_natural_language(const char* natural_language, const Table* table) {
-    if (natural_language == NULL) {
+char* produce_sql_from_natural_text(const char* text, const Table* table) {
+    if (text == NULL) {
         return NULL;
     }
 
@@ -74,36 +73,36 @@ char* generate_sql_from_natural_language(const char* natural_language, const Tab
         return NULL;
     }
 
-    char nl_lower[256];
-    strncpy(nl_lower, natural_language, sizeof(nl_lower) - 1);
-    nl_lower[sizeof(nl_lower) - 1] = '\0';
+    char txt_lower[256];
+    strncpy(txt_lower, text, sizeof(txt_lower) - 1);
+    txt_lower[sizeof(txt_lower) - 1] = '\0';
     
-    for (char* p = nl_lower; *p; p++) {
+    for (char* p = txt_lower; *p; p++) {
         *p = tolower(*p);
     }
 
-    // Simple natural language to SQL conversion
-    if (strstr(nl_lower, "show all") != NULL || strstr(nl_lower, "view all") != NULL) {
+    /* 简单的自然语言转SQL */
+    if (strstr(txt_lower, "show all") != NULL || strstr(txt_lower, "view all") != NULL) {
         if (table != NULL) {
             sprintf(sql, "SELECT * FROM %s", table->name);
         } else {
             strcpy(sql, "SELECT * FROM table_name");
         }
-    } else if (strstr(nl_lower, "find") != NULL || strstr(nl_lower, "search") != NULL) {
-        // Extract keywords for simple conditional queries
+    } else if (strstr(txt_lower, "find") != NULL || strstr(txt_lower, "search") != NULL) {
+        /* 提取关键词用于条件查询 */
         if (table != NULL && table->col_count > 0) {
             sprintf(sql, "SELECT * FROM %s WHERE %s LIKE '%%keyword%%'", 
                    table->name, table->columns[0].name);
         } else {
             strcpy(sql, "SELECT * FROM table_name WHERE column_name LIKE '%keyword%'");
         }
-    } else if (strstr(nl_lower, "count") != NULL || strstr(nl_lower, "number") != NULL) {
+    } else if (strstr(txt_lower, "count") != NULL || strstr(txt_lower, "number") != NULL) {
         if (table != NULL) {
             sprintf(sql, "SELECT COUNT(*) FROM %s", table->name);
         } else {
             strcpy(sql, "SELECT COUNT(*) FROM table_name");
         }
-    } else if (strstr(nl_lower, "sort") != NULL) {
+    } else if (strstr(txt_lower, "sort") != NULL) {
         if (table != NULL && table->col_count > 0) {
             sprintf(sql, "SELECT * FROM %s ORDER BY %s ASC", 
                    table->name, table->columns[0].name);
@@ -117,13 +116,13 @@ char* generate_sql_from_natural_language(const char* natural_language, const Tab
     return sql;
 }
 
-char* optimize_sql_query(const char* sql, const Table* table) {
+char* enhance_sql_statement(const char* sql, const Table* table) {
     if (sql == NULL) {
         return NULL;
     }
 
-    char* optimized_sql = malloc(512);
-    if (optimized_sql == NULL) {
+    char* optimized = malloc(512);
+    if (optimized == NULL) {
         return NULL;
     }
 
@@ -135,36 +134,36 @@ char* optimize_sql_query(const char* sql, const Table* table) {
         *p = toupper(*p);
     }
 
-    // Simple SQL optimization suggestions
+    /* 简单的SQL优化建议 */
     if (strstr(sql_upper, "SELECT *") != NULL) {
         if (table != NULL && table->col_count > 0) {
-            // Suggest using specific column names
-            strcpy(optimized_sql, "Suggestion: Use specific column names instead of *, for example: SELECT ");
+            /* 建议使用具体的列名 */
+            strcpy(optimized, "Suggestion: Use specific column names instead of *, e.g.: SELECT ");
             for (int i = 0; i < table->col_count && i < 3; i++) {
-                strcat(optimized_sql, table->columns[i].name);
+                strcat(optimized, table->columns[i].name);
                 if (i < table->col_count - 1 && i < 2) {
-                    strcat(optimized_sql, ", ");
+                    strcat(optimized, ", ");
                 }
             }
             if (table->col_count > 3) {
-                strcat(optimized_sql, " etc.");
+                strcat(optimized, " etc.");
             }
-            strcat(optimized_sql, " FROM ...");
+            strcat(optimized, " FROM ...");
         } else {
-            strcpy(optimized_sql, "Suggestion: Use specific column names instead of * to improve query performance");
+            strcpy(optimized, "Suggestion: Use specific column names instead of * to improve performance");
         }
     } else if (strstr(sql_upper, "LIKE '%") != NULL) {
-        strcpy(optimized_sql, "Suggestion: Leading wildcard searches (LIKE '%...') cannot use indexes, consider other query methods");
+        strcpy(optimized, "Suggestion: Leading wildcard searches (LIKE '%...') cannot use indexes, try other methods");
     } else if (strstr(sql_upper, "ORDER BY") == NULL && strstr(sql_upper, "WHERE") != NULL) {
-        strcpy(optimized_sql, "Query looks good. If you need to sort results, you can add ORDER BY clause");
+        strcpy(optimized, "Query looks OK. Add ORDER BY if you need sorting");
     } else {
-        strcpy(optimized_sql, "Query syntax is correct. For further optimization, please provide more context information");
+        strcpy(optimized, "Query syntax is correct. For more optimization, give more context");
     }
 
-    return optimized_sql;
+    return optimized;
 }
 
-char* explain_query_plan(const char* sql, const Table* table) {
+char* elucidate_query_execution(const char* sql, const Table* table) {
     if (sql == NULL) {
         return NULL;
     }
@@ -182,12 +181,12 @@ char* explain_query_plan(const char* sql, const Table* table) {
         *p = toupper(*p);
     }
 
-    // Simple query plan explanation
+    /* 简单的查询计划解释 */
     if (strstr(sql_upper, "SELECT") != NULL) {
         strcpy(explanation, "Query plan:\n");
         
         if (strstr(sql_upper, "WHERE") != NULL) {
-            strcat(explanation, "1. Execute WHERE condition filtering\n");
+            strcat(explanation, "1. Apply WHERE condition filter\n");
         }
         
         if (strstr(sql_upper, "ORDER BY") != NULL) {
@@ -198,11 +197,11 @@ char* explain_query_plan(const char* sql, const Table* table) {
         
         if (table != NULL) {
             char temp[100];
-            sprintf(temp, "\nExpected to process %d rows of data", table->row_count);
+            sprintf(temp, "\nWill process about %d rows", table->row_count);
             strcat(explanation, temp);
         }
     } else {
-        strcpy(explanation, "Unable to parse query type, please check SQL syntax");
+        strcpy(explanation, "Cannot understand query type, check SQL syntax");
     }
 
     return explanation;

@@ -3,10 +3,10 @@
 
 #include "../db/table.h"
 
-// AI辅助函数
-char* get_ai_suggestion(const char* question, const Table* table);
-char* generate_sql_from_natural_language(const char* natural_language, const Table* table);
-char* optimize_sql_query(const char* sql, const Table* table);
-char* explain_query_plan(const char* sql, const Table* table);
+/* AI assistance functions */
+char* obtain_ai_recommendation(const char* user_query, const Table* dataset);
+char* produce_sql_from_natural_text(const char* natural_text, const Table* dataset);
+char* enhance_sql_statement(const char* sql_command, const Table* dataset);
+char* elucidate_query_execution(const char* sql_command, const Table* dataset);
 
 #endif // AI_HELPER_H
