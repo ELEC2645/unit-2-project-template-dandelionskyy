@@ -241,6 +241,6 @@ int verify_test_result(TestCase* test_case, Table* result_table)
     return 0;
 }
 
-//void cleanup_test_resources() {
-
-//}
+void cleanup_test_resources() {
+    // Clean up any test resources if needed
+}

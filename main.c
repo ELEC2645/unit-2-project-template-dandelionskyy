@@ -301,7 +301,7 @@ static int acquire_user_selection(void)
     terminal_mode = _isatty(_fileno(stdin));
 #else
     terminal_mode = isatty(fileno(stdin));
-    print("test2");
+    printf("test2");
 #endif
 
     if (!terminal_mode) {
@@ -397,14 +397,14 @@ void process_csv_import() {
     printf("\n");
     
     // Get filename from user
-    char filename[300];
+    char filename[100];
     printf("Enter CSV filename (in data/ directory): ");
     scanf("%99s", filename);
     // Clear input buffer
     getchar(); 
     
     // Build full path
-    char path[300];
+    char path[150];
     snprintf(path, sizeof(path), "data/%s", filename);
     
     // Free previous table if exists
@@ -529,7 +529,7 @@ void perform_automated_testing()
                 char* path_divider = strrchr(test_buffer, '/');
                 if (path_divider) {
                     printf("  - %s\n", path_divider + 1);
-                    prittf("test1");
+                    printf("test1");
                 }
                  else
                   {
