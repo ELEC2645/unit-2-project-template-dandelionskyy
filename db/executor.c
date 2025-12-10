@@ -4,6 +4,9 @@
 #include <string.h>
 #include <ctype.h>
 
+
+
+// 执行查询并返回结果
 QueryResult* execute_query(Table* table, Query* query) {
     if (table == NULL || query == NULL) {
         return NULL;
@@ -27,7 +30,8 @@ QueryResult* execute_query(Table* table, Query* query) {
     }
 
     // Execute column selection
-    if (query->column_count > 0 || query->column_count == 0) { // column_count=0 means SELECT *
+    // column_count=0 means SELECT *
+    if (query->column_count > 0 || query->column_count == 0) { 
         temp_table = select_columns(temp_table, query);
         if (temp_table == NULL) {
             strcpy(result->message, "Column selection execution failed");
@@ -54,6 +58,9 @@ QueryResult* execute_query(Table* table, Query* query) {
     return result;
 }
 
+
+
+// 执行条件并返回过滤后的表
 int evaluate_condition(const Table* table, int row, const Condition* condition) {
     if (table == NULL || condition == NULL || row < 0 || row >= table->row_count) {
         return 0;
@@ -116,6 +123,10 @@ int evaluate_condition(const Table* table, int row, const Condition* condition) 
     }
 }
 
+
+
+
+// NULL
 Table* select_columns(const Table* table, const Query* query) {
     if (table == NULL || query == NULL) {
         return NULL;
@@ -141,6 +152,10 @@ Table* select_columns(const Table* table, const Query* query) {
         }
     }
 
+
+
+
+
     // 创建新表
     Table* result_table = create_table("query_result", selected_col_count, selected_cols);
     free(selected_cols);
@@ -159,20 +174,28 @@ Table* select_columns(const Table* table, const Query* query) {
 
         for (int col = 0; col < selected_col_count; col++) {
             int src_col_index;
-            if (query->column_count == 0) {
-                src_col_index = col; // SELECT * 的情况
-            } else {
+            if (query->column_count == 0) 
+            {
+                // SELECT * 的情况
+                src_col_index = col; 
+            } 
+            else 
+            {
                 src_col_index = get_column_index(table, query->columns[col]);
             }
             
-            if (src_col_index != -1 && table->data[row][src_col_index] != NULL) {
+            if (src_col_index != -1 && table->data[row][src_col_index] != NULL) 
+            {
                 row_data[col] = table->data[row][src_col_index];
-            } else {
+            } 
+            else 
+            {
                 row_data[col] = "";
             }
         }
 
-        if (add_row(result_table, row_data) != 0) {
+        if (add_row(result_table, row_data) != 0) 
+        {
             free(row_data);
             free_table(result_table);
             return NULL;
@@ -183,54 +206,70 @@ Table* select_columns(const Table* table, const Query* query) {
     return result_table;
 }
 
-Table* filter_rows(const Table* table, const Condition* conditions) {
-    if (table == NULL || conditions == NULL) {
+
+
+
+// 过滤表的行
+Table* filter_rows(const Table* table, const Condition* conditions) 
+{
+    if (table == NULL || conditions == NULL) 
+    {
         return NULL;
     }
 
     // 创建新表
     Table* result_table = create_table("filtered_result", table->col_count, NULL);
-    if (result_table == NULL) {
+    if (result_table == NULL) 
+    {
         return NULL;
     }
 
     // 复制列信息
-    for (int i = 0; i < table->col_count; i++) {
+    for (int i = 0; i < table->col_count; i++) 
+    {
         strcpy(result_table->columns[i].name, table->columns[i].name);
         result_table->columns[i].type = table->columns[i].type;
     }
     result_table->col_count = table->col_count;
 
     // 应用过滤条件
-    for (int row = 0; row < table->row_count; row++) {
+    for (int row = 0; row < table->row_count; row++) 
+    {
         int match = 1;
         const Condition* current_condition = conditions;
         
         // 检查所有AND条件
-        while (current_condition != NULL && match) {
-            if (!evaluate_condition(table, row, current_condition)) {
+        while (current_condition != NULL && match) 
+        {
+            if (!evaluate_condition(table, row, current_condition)) 
+            {
                 match = 0;
             }
             current_condition = current_condition->next;
         }
 
-        if (match) {
+        if (match) 
+        {
             // 复制匹配的行
             const char** row_data = malloc(table->col_count * sizeof(char*));
-            if (row_data == NULL) {
+            if (row_data == NULL) 
+            {
                 free_table(result_table);
                 return NULL;
             }
 
-            for (int col = 0; col < table->col_count; col++) {
-                if (table->data[row][col] != NULL) {
+            for (int col = 0; col < table->col_count; col++) 
+            {
+                if (table->data[row][col] != NULL) 
+                {
                     row_data[col] = table->data[row][col];
                 } else {
                     row_data[col] = "";
                 }
             }
 
-            if (add_row(result_table, row_data) != 0) {
+            if (add_row(result_table, row_data) != 0)
+             {
                 free(row_data);
                 free_table(result_table);
                 return NULL;
@@ -242,6 +281,10 @@ Table* filter_rows(const Table* table, const Condition* conditions) {
     return result_table;
 }
 
+
+
+
+// 对表进行排序
 Table* sort_table(const Table* table, const char* column, SortDirection direction) {
     if (table == NULL || column == NULL) {
         return NULL;
@@ -289,6 +332,7 @@ Table* sort_table(const Table* table, const char* column, SortDirection directio
         free(row_data);
     }
 
+
     // 简单的冒泡排序
     for (int i = 0; i < result_table->row_count - 1; i++) {
         for (int j = 0; j < result_table->row_count - i - 1; j++) {
@@ -305,11 +349,15 @@ Table* sort_table(const Table* table, const char* column, SortDirection directio
                 } else {
                     should_swap = num1 < num2;
                 }
-            } else {
+            } 
+            else 
+            {
                 // 字符串比较
                 if (direction == SORT_ASC) {
                     should_swap = strcmp(value1, value2) > 0;
-                } else {
+                } 
+                else 
+                {
                     should_swap = strcmp(value1, value2) < 0;
                 }
             }

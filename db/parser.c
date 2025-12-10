@@ -4,6 +4,52 @@
 #include <string.h>
 #include <ctype.h>
 
+
+
+
+Operator parse_operator(const char* op_str) {
+    if (strcmp(op_str, "=") == 0) return OP_EQUAL;
+    if (strcmp(op_str, "!=") == 0) return OP_NOT_EQUAL;
+    if (strcmp(op_str, ">") == 0) return OP_GREATER;
+    if (strcmp(op_str, "<") == 0) return OP_LESS;
+    if (strcmp(op_str, ">=") == 0) return OP_GREATER_EQUAL;
+    if (strcmp(op_str, "<=") == 0) return OP_LESS_EQUAL;
+    if (strcmp(op_str, "LIKE") == 0) return OP_LIKE;
+    return OP_EQUAL; // 默认
+}
+
+QueryType parse_query_type(const char* sql) {
+    char sql_upper[512];
+    strncpy(sql_upper, sql, sizeof(sql_upper) - 1);
+    sql_upper[sizeof(sql_upper) - 1] = '\0';
+    
+    for (char* p = sql_upper; *p; p++) {
+        *p = toupper(*p);
+    }
+    
+    if (strstr(sql_upper, "SELECT") != NULL) return QUERY_SELECT;
+    if (strstr(sql_upper, "WHERE") != NULL) return QUERY_FILTER;
+    if (strstr(sql_upper, "COUNT") != NULL || strstr(sql_upper, "SUM") != NULL || 
+        strstr(sql_upper, "AVG") != NULL || strstr(sql_upper, "MAX") != NULL || 
+        strstr(sql_upper, "MIN") != NULL) return QUERY_AGGREGATE;
+    if (strstr(sql_upper, "ORDER BY") != NULL) return QUERY_SORT;
+    
+    return QUERY_SELECT; // 默认
+}
+
+void free_condition(Condition* condition) {
+    while (condition != NULL) {
+        Condition* next = condition->next;
+        free(condition);
+        condition = next;
+    }
+}
+
+
+
+
+
+// 定义常量
 Query* parse_query(const char* sql) {
     if (sql == NULL || strlen(sql) == 0) {
         return NULL;
@@ -16,7 +62,7 @@ Query* parse_query(const char* sql) {
 
     // 简单的SQL解析实现
     // 这里只实现基本的SELECT查询解析
-    char sql_copy[512];
+    char sql_copy[1000];
     strncpy(sql_copy, sql, sizeof(sql_copy) - 1);
     sql_copy[sizeof(sql_copy) - 1] = '\0';
 
@@ -35,7 +81,7 @@ Query* parse_query(const char* sql) {
         
         if (from_start != NULL) {
             // 解析列名
-            char columns_part[256];
+            char columns_part[200];
             strncpy(columns_part, select_start + 6, from_start - select_start - 6);
             columns_part[from_start - select_start - 6] = '\0';
             
@@ -62,7 +108,7 @@ Query* parse_query(const char* sql) {
             
             // 解析表名
             char* where_start = strstr(from_start, "WHERE");
-            char table_part[100];
+            char table_part[500];
             
             if (where_start != NULL) {
                 strncpy(table_part, from_start + 4, where_start - from_start - 4);
@@ -86,7 +132,7 @@ Query* parse_query(const char* sql) {
                 while (*condition_str == ' ') condition_str++;
                 
                 // 简单的条件解析
-                char condition[256];
+                char condition[500];
                 strncpy(condition, condition_str, sizeof(condition) - 1);
                 condition[sizeof(condition) - 1] = '\0';
                 
@@ -148,49 +194,13 @@ Query* parse_query(const char* sql) {
                 }
             }
         }
-    } else {
+    } 
+    else 
+    {
         // 不支持其他查询类型
         free_query(query);
         return NULL;
     }
 
     return query;
-}
-
-Operator parse_operator(const char* op_str) {
-    if (strcmp(op_str, "=") == 0) return OP_EQUAL;
-    if (strcmp(op_str, "!=") == 0) return OP_NOT_EQUAL;
-    if (strcmp(op_str, ">") == 0) return OP_GREATER;
-    if (strcmp(op_str, "<") == 0) return OP_LESS;
-    if (strcmp(op_str, ">=") == 0) return OP_GREATER_EQUAL;
-    if (strcmp(op_str, "<=") == 0) return OP_LESS_EQUAL;
-    if (strcmp(op_str, "LIKE") == 0) return OP_LIKE;
-    return OP_EQUAL; // 默认
-}
-
-QueryType parse_query_type(const char* sql) {
-    char sql_upper[512];
-    strncpy(sql_upper, sql, sizeof(sql_upper) - 1);
-    sql_upper[sizeof(sql_upper) - 1] = '\0';
-    
-    for (char* p = sql_upper; *p; p++) {
-        *p = toupper(*p);
-    }
-    
-    if (strstr(sql_upper, "SELECT") != NULL) return QUERY_SELECT;
-    if (strstr(sql_upper, "WHERE") != NULL) return QUERY_FILTER;
-    if (strstr(sql_upper, "COUNT") != NULL || strstr(sql_upper, "SUM") != NULL || 
-        strstr(sql_upper, "AVG") != NULL || strstr(sql_upper, "MAX") != NULL || 
-        strstr(sql_upper, "MIN") != NULL) return QUERY_AGGREGATE;
-    if (strstr(sql_upper, "ORDER BY") != NULL) return QUERY_SORT;
-    
-    return QUERY_SELECT; // 默认
-}
-
-void free_condition(Condition* condition) {
-    while (condition != NULL) {
-        Condition* next = condition->next;
-        free(condition);
-        condition = next;
-    }
 }

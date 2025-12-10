@@ -1,5 +1,5 @@
 #include "string_utils.h"
-
+//zifuchuanliushu
 void trim_string(char* str) {
     if (str == NULL) {
         return;
@@ -26,7 +26,7 @@ void trim_string(char* str) {
     // 添加终止符
     str[end - start + 1] = '\0';
 }
-
+//zifuchuanliushu
 char* to_lower_case(const char* str) {
     if (str == NULL) {
         return NULL;
@@ -46,25 +46,7 @@ char* to_lower_case(const char* str) {
     return result;
 }
 
-char* to_upper_case(const char* str) {
-    if (str == NULL) {
-        return NULL;
-    }
-
-    char* result = malloc(strlen(str) + 1);
-    if (result == NULL) {
-        return NULL;
-    }
-
-    char* p = result;
-    while (*str) {
-        *p++ = toupper((unsigned char)*str++);
-    }
-    *p = '\0';
-
-    return result;
-}
-
+//zifuchuan
 int string_contains(const char* str, const char* substr) {
     if (str == NULL || substr == NULL) {
         return 0;
@@ -72,7 +54,7 @@ int string_contains(const char* str, const char* substr) {
 
     return strstr(str, substr) != NULL;
 }
-
+//zifu
 char** split_string(const char* str, const char* delimiter, int* count) {
     if (str == NULL || delimiter == NULL || count == NULL) {
         return NULL;
@@ -124,7 +106,7 @@ char** split_string(const char* str, const char* delimiter, int* count) {
     *count = element_count;
     return result;
 }
-
+//zifuchuanliu
 void free_string_array(char** array, int count) {
     if (array == NULL) {
         return;
@@ -137,7 +119,7 @@ void free_string_array(char** array, int count) {
     }
     free(array);
 }
-
+//zifuchuan
 int is_numeric(const char* str) {
     if (str == NULL || *str == '\0') {
         return 0;
@@ -147,7 +129,7 @@ int is_numeric(const char* str) {
     strtod(str, &end);
     return *end == '\0';
 }
-
+//zifuchuan
 int is_integer(const char* str) {
     if (str == NULL || *str == '\0') {
         return 0;
@@ -156,4 +138,27 @@ int is_integer(const char* str) {
     char* end;
     strtol(str, &end, 10);
     return *end == '\0';
+}
+
+
+
+
+//zifuchuanliushu
+char* to_upper_case(const char* str) {
+    if (str == NULL) {
+        return NULL;
+    }
+
+    char* result = malloc(strlen(str) + 1);
+    if (result == NULL) {
+        return NULL;
+    }
+
+    char* p = result;
+    while (*str) {
+        *p++ = toupper((unsigned char)*str++);
+    }
+    *p = '\0';
+
+    return result;
 }

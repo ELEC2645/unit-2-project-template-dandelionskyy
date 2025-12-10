@@ -4,6 +4,8 @@
 #include <string.h>
 #include <ctype.h>
 
+
+//obtain AI recommendation based on the question and table information
 char* obtain_ai_recommendation(const char* question, const Table* table) {
     if (question == NULL) {
         return NULL;
@@ -15,7 +17,7 @@ char* obtain_ai_recommendation(const char* question, const Table* table) {
     }
 
     /* 简单的AI建议逻辑 */
-    char q_lower[256];
+    char q_lower[500];
     strncpy(q_lower, question, sizeof(q_lower) - 1);
     q_lower[sizeof(q_lower) - 1] = '\0';
     
@@ -63,6 +65,8 @@ char* obtain_ai_recommendation(const char* question, const Table* table) {
     return suggestion;
 }
 
+
+//produce SQL statement from natural language text
 char* produce_sql_from_natural_text(const char* text, const Table* table) {
     if (text == NULL) {
         return NULL;
@@ -116,6 +120,9 @@ char* produce_sql_from_natural_text(const char* text, const Table* table) {
     return sql;
 }
 
+
+
+//enhance SQL statement with optimization suggestions
 char* enhance_sql_statement(const char* sql, const Table* table) {
     if (sql == NULL) {
         return NULL;
@@ -163,6 +170,9 @@ char* enhance_sql_statement(const char* sql, const Table* table) {
     return optimized;
 }
 
+
+
+//elucidate the execution plan of a SQL query
 char* elucidate_query_execution(const char* sql, const Table* table) {
     if (sql == NULL) {
         return NULL;
@@ -181,6 +191,8 @@ char* elucidate_query_execution(const char* sql, const Table* table) {
         *p = toupper(*p);
     }
 
+
+
     /* 简单的查询计划解释 */
     if (strstr(sql_upper, "SELECT") != NULL) {
         strcpy(explanation, "Query plan:\n");
@@ -196,7 +208,7 @@ char* elucidate_query_execution(const char* sql, const Table* table) {
         strcat(explanation, "3. Return query results");
         
         if (table != NULL) {
-            char temp[100];
+            char temp[200];
             sprintf(temp, "\nWill process about %d rows", table->row_count);
             strcat(explanation, temp);
         }

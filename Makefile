@@ -1,7 +1,3 @@
-# MiniDB-TestAI 项目编译脚本
-# 作者: [你的名字]
-# 版本: 1.0
-
 # 编译器设置
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g -I.

@@ -2,29 +2,40 @@
 #include <stdio.h>
 #include <time.h>
 
+
+
+
+//test
 void print_test_report(const TestSuite* suite) {
     if (suite == NULL) {
         printf("测试套件为空\n");
         return;
     }
 
-    printf("\n=== 详细测试报告 ===\n");
-    printf("测试套件: %s\n", suite->name);
-    printf("执行时间: %s", ctime(&(time_t){suite->total_time}));
-    printf("测试统计: %d 通过, %d 失败, %d 跳过, %d 总计\n",
+    printf("\n=== test report ===\n");
+    printf("test suit: %s\n", suite->name);
+    printf("time: %s", ctime(&(time_t){suite->total_time}));
+    printf("tests: %d pass, %d fail, %d skip, %d total\n",
            suite->passed_count, suite->failed_count, suite->skipped_count, suite->test_count);
     
     double pass_rate = (suite->test_count > 0) ? 
         (double)suite->passed_count / suite->test_count * 100 : 0;
-    printf("通过率: %.1f%%\n", pass_rate);
+    printf("pass rate: %.1f%%\n", pass_rate);
 
-    printf("\n--- 测试用例详情 ---\n");
+    printf("\n--- test sample ---\n");
     for (int i = 0; i < suite->test_count; i++) {
         const TestCase* test_case = &suite->test_cases[i];
         print_test_case_result(test_case);
     }
 }
 
+
+
+
+
+
+
+//try to generate html report
 void generate_html_report(const TestSuite* suite, const char* filename) {
     if (suite == NULL || filename == NULL) {
         return;
@@ -133,6 +144,11 @@ void generate_html_report(const TestSuite* suite, const char* filename) {
     printf("HTML报告已生成: %s\n", filename);
 }
 
+
+
+
+
+//result
 void print_test_case_result(const TestCase* test_case) {
     if (test_case == NULL) {
         return;

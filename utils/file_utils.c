@@ -1,6 +1,5 @@
 #include "file_utils.h"
 #include <sys/stat.h>
-
 #ifdef _WIN32
 #include <direct.h>
 #define MKDIR(path) _mkdir(path)
@@ -9,7 +8,7 @@
 #include <sys/types.h>
 #define MKDIR(path) mkdir(path, 0755)
 #endif
-
+//wenjiancunzai
 int file_exists(const char* filename) {
     if (filename == NULL) {
         return 0;
@@ -23,23 +22,8 @@ int file_exists(const char* filename) {
     return 0;
 }
 
-long get_file_size(const char* filename) {
-    if (filename == NULL) {
-        return -1;
-    }
 
-    FILE* file = fopen(filename, "rb");
-    if (file == NULL) {
-        return -1;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    fclose(file);
-
-    return size;
-}
-
+//wenjianhangshu
 int count_lines_in_file(const char* filename) {
     if (filename == NULL) {
         return -1;
@@ -51,7 +35,7 @@ int count_lines_in_file(const char* filename) {
     }
 
     int line_count = 0;
-    char buffer[1024];
+    char buffer[2000];
 
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
         line_count++;
@@ -60,7 +44,7 @@ int count_lines_in_file(const char* filename) {
     fclose(file);
     return line_count;
 }
-
+//wenjianshuju
 char* read_file_contents(const char* filename) {
     if (filename == NULL) {
         return NULL;
@@ -95,7 +79,7 @@ char* read_file_contents(const char* filename) {
     fclose(file);
     return content;
 }
-
+//wenjianxie
 int write_file_contents(const char* filename, const char* content) {
     if (filename == NULL || content == NULL) {
         return 0;
@@ -111,7 +95,7 @@ int write_file_contents(const char* filename, const char* content) {
 
     return bytes_written == strlen(content);
 }
-
+//wenjiantianjia
 int append_to_file(const char* filename, const char* content) {
     if (filename == NULL || content == NULL) {
         return 0;
@@ -127,18 +111,33 @@ int append_to_file(const char* filename, const char* content) {
 
     return bytes_written == strlen(content);
 }
-
+//wenjiantianjian
 int create_directory(const char* path) {
     if (path == NULL) {
         return 0;
     }
-
     // 检查目录是否已存在
     struct stat st;
     if (stat(path, &st) == 0) {
-        return S_ISDIR(st.st_mode); // 已存在且是目录
+        return S_ISDIR(st.st_mode); 
+        // 已存在且是目录
     }
-
     // 创建目录
     return MKDIR(path) == 0;
+}
+long get_file_size(const char* filename) {
+    if (filename == NULL) {
+        return -1;
+    }
+
+    FILE* file = fopen(filename, "rb");
+    if (file == NULL) {
+        return -1;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fclose(file);
+
+    return size;
 }

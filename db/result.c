@@ -10,6 +10,8 @@
 #include <strings.h>
 #endif
 
+
+// 定义常量
 void print_query_result(const QueryResult* result) {
     if (result == NULL) {
         printf("Query result is empty\n");
@@ -20,13 +22,17 @@ void print_query_result(const QueryResult* result) {
         printf("Query failed: %s\n", result->message);
         return;
     }
-
+    
     printf("Query result: %s\n", result->message);
     
     if (result->result_table != NULL) {
         print_table(result->result_table);
     }
 }
+
+
+
+
 
 void export_result_to_csv(const QueryResult* result, const char* filename) {
     if (result == NULL || filename == NULL || !result->success || result->result_table == NULL) {
@@ -39,7 +45,7 @@ void export_result_to_csv(const QueryResult* result, const char* filename) {
         printf("Cannot create file: %s\n", filename);
         return;
     }
-
+    //test4
     Table* table = result->result_table;
     
     // Write header
@@ -80,7 +86,7 @@ void export_result_to_csv(const QueryResult* result, const char* filename) {
         }
         fprintf(file, "\n");
     }
-
+    //test2
     fclose(file);
     printf("Result exported to: %s\n", filename);
 }
@@ -94,7 +100,7 @@ Table* create_table(const char* name, int col_count, const char** col_names) {
 
     strncpy(table->name, name, sizeof(table->name) - 1);
     table->name[sizeof(table->name) - 1] = '\0';
-    
+    //test1
     table->col_count = col_count;
     table->row_count = 0;
     table->capacity = INITIAL_CAPACITY;
@@ -136,28 +142,14 @@ Table* create_table(const char* name, int col_count, const char** col_names) {
     return table;
 }
 
-void free_table(Table* table) {
-    if (table == NULL) {
-        return;
-    }
 
-    if (table->data != NULL) {
-        for (int i = 0; i < table->capacity; i++) {
-            if (table->data[i] != NULL) {
-                for (int j = 0; j < table->col_count; j++) {
-                    if (table->data[i][j] != NULL) {
-                        free(table->data[i][j]);
-                    }
-                }
-                free(table->data[i]);
-            }
-        }
-        free(table->data);
-    }
 
-    free(table);
-}
 
+
+
+
+
+// 添加行的函数实现
 int add_row(Table* table, const char** row_data) {
     if (table == NULL || row_data == NULL) {
         return -1;
@@ -205,7 +197,7 @@ int add_row(Table* table, const char** row_data) {
             table->data[table->row_count][i] = NULL;
         }
     }
-
+    //test3
     table->row_count++;
     return 0;
 }
@@ -225,7 +217,7 @@ void print_table(const Table* table) {
     for (int i = 0; i < table->col_count; i++) {
         col_widths[i] = strlen(table->columns[i].name);
     }
-
+    // 计算每列的实际宽度
     for (int row = 0; row < table->row_count && row < 20; row++) { // 限制显示前20行
         for (int col = 0; col < table->col_count; col++) {
             if (table->data[row][col] != NULL) {
@@ -252,6 +244,7 @@ void print_table(const Table* table) {
     printf("\n");
 
     // 打印数据（限制显示前20行）
+    // 限制显示前20行
     int display_rows = (table->row_count > 20) ? 20 : table->row_count;
     for (int row = 0; row < display_rows; row++) {
         for (int col = 0; col < table->col_count; col++) {
@@ -270,11 +263,15 @@ void print_table(const Table* table) {
     printf("\n");
 }
 
+
+
+
+// 获取列索引的函数实现
 int get_column_index(const Table* table, const char* column_name) {
     if (table == NULL || column_name == NULL) {
         return -1;
     }
-
+    // 检查列名
     for (int i = 0; i < table->col_count; i++) {
         if (strcasecmp(table->columns[i].name, column_name) == 0) {
             return i;
@@ -306,6 +303,9 @@ Query* create_query() {
     return query;
 }
 
+
+
+// 释放查询条件的内存
 void free_query(Query* query) {
     if (query == NULL) {
         return;
@@ -314,7 +314,7 @@ void free_query(Query* query) {
     free_condition(query->where_conditions);
     free(query);
 }
-
+// 释放条件链表的内存
 QueryResult* create_query_result() {
     QueryResult* result = malloc(sizeof(QueryResult));
     if (result == NULL) {
@@ -328,14 +328,42 @@ QueryResult* create_query_result() {
 
     return result;
 }
-
+// 释放查询结果的内存
 void free_query_result(QueryResult* result) {
     if (result == NULL) {
         return;
     }
-
+    // 释放结果表格的内存
     if (result->result_table != NULL) {
         free_table(result->result_table);
     }
     free(result);
+}
+
+
+
+
+
+
+//finished
+void free_table(Table* table) {
+    if (table == NULL) {
+        return;
+    }
+
+    if (table->data != NULL) {
+        for (int i = 0; i < table->capacity; i++) {
+            if (table->data[i] != NULL) {
+                for (int j = 0; j < table->col_count; j++) {
+                    if (table->data[i][j] != NULL) {
+                        free(table->data[i][j]);
+                    }
+                }
+                free(table->data[i]);
+            }
+        }
+        free(table->data);
+    }
+
+    free(table);
 }

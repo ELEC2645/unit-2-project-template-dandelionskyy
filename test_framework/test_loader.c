@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+//1
+// load_test_suite_from_file function implementation
 TestSuite* load_test_suite_from_file(const char* filename) {
     if (filename == NULL) {
         return NULL;
@@ -20,7 +23,7 @@ TestSuite* load_test_suite_from_file(const char* filename) {
         return NULL;
     }
 
-    char buffer[512];
+    char buffer[1000];
     int line_number = 0;
 
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
@@ -46,12 +49,16 @@ TestSuite* load_test_suite_from_file(const char* filename) {
     return suite;
 }
 
+
+
+//2
+// parse_test_case_line function implementation
 TestCase* parse_test_case_line(const char* line) {
     if (line == NULL || strlen(line) == 0) {
         return NULL;
     }
 
-    char line_copy[512];
+    char line_copy[1000];
     strncpy(line_copy, line, sizeof(line_copy) - 1);
     line_copy[sizeof(line_copy) - 1] = '\0';
 
@@ -68,7 +75,7 @@ TestCase* parse_test_case_line(const char* line) {
     if (token_count < 6) {
         return NULL;
     }
-
+    // Create test case
     TestCase* test_case = create_test_case(tokens[0], tokens[5], parse_test_type(tokens[1]));
     if (test_case == NULL) {
         return NULL;
@@ -90,6 +97,11 @@ TestCase* parse_test_case_line(const char* line) {
     return test_case;
 }
 
+
+
+
+//3
+// parse_test_type function implementation
 TestType parse_test_type(const char* type_str) {
     if (strcmp(type_str, "SQL_QUERY") == 0) return TEST_SQL_QUERY;
     if (strcmp(type_str, "DATA_LOAD") == 0) return TEST_DATA_LOAD;
@@ -103,6 +115,11 @@ TestType parse_test_type(const char* type_str) {
     return TEST_SQL_QUERY; // Default
 }
 
+
+
+
+
+//4
 // Test case operation functions implementation
 TestCase* create_test_case(const char* name, const char* description, TestType type) {
     TestCase* test_case = malloc(sizeof(TestCase));
@@ -124,6 +141,9 @@ TestCase* create_test_case(const char* name, const char* description, TestType t
     return test_case;
 }
 
+
+
+//5
 void free_test_case(TestCase* test_case) {
     if (test_case != NULL) {
         free(test_case);
@@ -147,6 +167,10 @@ TestSuite* create_test_suite(const char* name) {
     return suite;
 }
 
+
+
+
+//6
 void free_test_suite(TestSuite* suite) {
     if (suite == NULL) {
         return;
@@ -161,6 +185,10 @@ void free_test_suite(TestSuite* suite) {
     free(suite);
 }
 
+
+
+
+//7
 int add_test_case(TestSuite* suite, TestCase* test_case) {
     if (suite == NULL || test_case == NULL) {
         return -1;
@@ -174,7 +202,7 @@ int add_test_case(TestSuite* suite, TestCase* test_case) {
     suite->test_cases = new_cases;
     suite->test_cases[suite->test_count] = *test_case;
     suite->test_count++;
-
-    free(test_case); // Free original pointer after copying
+    // Free original pointer after copying
+    free(test_case); 
     return 0;
 }

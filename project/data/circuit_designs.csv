@@ -1,5 +1,0 @@
-id,design_name,application,components,formula,description
-1,Low Pass Filter,Signal Processing,"R1=10K,C1=0.1uF","f_c=1/(2πRC)","First order RC low pass filter"
-2,Voltage Divider,Voltage Regulation,"R1=1K,R2=2K","V_out=V_in×R2/(R1+R2)","Simple voltage divider circuit"
-3,LED Driver,Display Circuit,"R=220,LED","I=(V_s-V_f)/R","LED current limiting resistor calculation"
-4,RC Timer,Timing Circuit,"R=10K,C=100uF","τ=R×C","RC time constant for timing applications"

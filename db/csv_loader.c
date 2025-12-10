@@ -7,9 +7,11 @@
 #define BUFFER_SIZE 1024
 #define INITIAL_CAPACITY 100
 
-Table* load_csv(const char* filename) {
+Table* load_csv(const char* filename) 
+{
     FILE* file = fopen(filename, "r");
-    if (file == NULL) {
+    if (file == NULL) 
+    {
         printf("Cannot open file: %s\n", filename);
         return NULL;
     }
@@ -17,8 +19,10 @@ Table* load_csv(const char* filename) {
     char buffer[BUFFER_SIZE];
     
     // Read header
-    if (fgets(buffer, sizeof(buffer), file) == NULL) {
+    if (fgets(buffer, sizeof(buffer), file) == NULL) 
+    {
         fclose(file);
+        printf("no header\n");
         printf("File is empty or read failed\n");
         return NULL;
     }
@@ -32,11 +36,19 @@ Table* load_csv(const char* filename) {
     buffer[strcspn(buffer, "\r\n")] = 0;
     
     token = strtok(buffer, ",");
-    while (token != NULL && col_count < MAX_COLUMNS) {
+    while (token != NULL && col_count < MAX_COLUMNS) 
+    {
         // Remove leading and trailing spaces
-        while (*token == ' ') token++;
+        while (*token == ' ') 
+        {
+            token++;
+        }
         char* end = token + strlen(token) - 1;
-        while (end > token && *end == ' ') end--;
+        while (end > token && *end == ' ') 
+        {
+            end--;
+        }
+
         *(end + 1) = '\0';
         
         col_names[col_count] = malloc(strlen(token) + 1);
@@ -47,9 +59,13 @@ Table* load_csv(const char* filename) {
     }
 
     // Create table
-    char table_name[100];
+    char table_name[200];
     const char* last_slash = strrchr(filename, '/');
+    
+    // Handle Windows file paths
     const char* table_name_start = (last_slash != NULL) ? last_slash + 1 : filename;
+
+
     strncpy(table_name, table_name_start, sizeof(table_name) - 1);
     char* dot = strrchr(table_name, '.');
     if (dot != NULL) *dot = '\0';
@@ -57,11 +73,13 @@ Table* load_csv(const char* filename) {
     Table* table = create_table(table_name, col_count, (const char**)col_names);
     
     // Free column names memory
-    for (int i = 0; i < col_count; i++) {
+    for (int i = 0; i < col_count; i++) 
+    {
         free(col_names[i]);
     }
 
-    if (table == NULL) {
+    if (table == NULL) 
+    {
         fclose(file);
         return NULL;
     }
@@ -72,7 +90,10 @@ Table* load_csv(const char* filename) {
         // Remove newline characters
         buffer[strcspn(buffer, "\r\n")] = 0;
         
-        if (strlen(buffer) == 0) continue;
+        if (strlen(buffer) == 0) 
+        {
+            continue;
+        }
         
         char* row_data[MAX_COLUMNS];
         int data_count = 0;
@@ -92,12 +113,17 @@ Table* load_csv(const char* filename) {
         }
         
         if (data_count == col_count) {
-            if (add_row(table, (const char**)row_data) != 0) {
+            if (add_row(table, (const char**)row_data) != 0) 
+            {
                 printf("Failed to add row\n");
-            } else {
+            } 
+            else
+             {
                 row_count++;
             }
-        } else {
+        } 
+        else
+         {
             printf("Skipping incomplete data row: %s\n", buffer);
         }
     }
@@ -111,21 +137,25 @@ Table* load_csv(const char* filename) {
     return table;
 }
 
-int detect_data_type(const char* value) {
-    if (value == NULL || strlen(value) == 0) {
+int detect_data_type(const char* value) 
+{
+    if (value == NULL || strlen(value) == 0) 
+    {
         return TYPE_UNKNOWN;
     }
     
     // Check if it's an integer
     char* end;
     strtol(value, &end, 10);
-    if (*end == '\0') {
+    if (*end == '\0') 
+    {
         return TYPE_INT;
     }
     
     // Check if it's a float
     strtod(value, &end);
-    if (*end == '\0') {
+    if (*end == '\0') 
+    {
         return TYPE_FLOAT;
     }
     
@@ -133,12 +163,15 @@ int detect_data_type(const char* value) {
     return TYPE_STRING;
 }
 
-void infer_column_types(Table* table) {
-    if (table == NULL || table->row_count == 0) {
+void infer_column_types(Table* table) 
+{
+    if (table == NULL || table->row_count == 0) 
+    {
         return;
     }
     
-    for (int col = 0; col < table->col_count; col++) {
+    for (int col = 0; col < table->col_count; col++)
+     {
         DataType detected_type = TYPE_UNKNOWN;
         
         // Check first few rows to infer type
